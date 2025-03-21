@@ -12,12 +12,7 @@ function gameBoard() {
   const getBoard = () => board;
 
   const putMark = (row, column, playerMark) => {
-    if (board[row][column] === "-") {
       board[row][column] = playerMark;
-    } else {
-      console.log("That square is occupied, dummy!");
-      return;
-    }
   };
 
   const printBoard = () => console.log(board);
@@ -54,10 +49,16 @@ const newRound = () => {
   console.log(`It's ${players.getActivePlayer().name} turn`);
 }
 const playRound = (row, column) => {
-  board.putMark(row, column, players.getActivePlayer().mark);
-  console.log(`${players.getActivePlayer().name} has put "${players.getActivePlayer().mark}" into row ${row}, column ${column}`);
-  players.switchPlayerTurn();
-  newRound();
+  if (board.getBoard()[row][column] === "-") {
+    board.putMark(row, column, players.getActivePlayer().mark);
+    console.log(`${players.getActivePlayer().name} has put "${players.getActivePlayer().mark}" into row ${row}, column ${column}`);
+    players.switchPlayerTurn();
+    newRound();
+  } else {
+      console.log("That square is occupied, dummy!")
+      newRound();
+      return;
+  }
 }
 
 newRound();
