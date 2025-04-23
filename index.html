@@ -7,6 +7,29 @@
     <title>Tic Tac Toe</title>
 </head>
 <body>
+    <h1>TIC⭕TAC❌TOE</h1>
+    <div class="user-data">
+        <form action="" method="post" class="">
+            <label for="nameP1">Player one name:</label>
+            <input type="text" name="nameP1" id="nameP1">
+            <label for="nameP2">Player two name:</label>
+            <input type="text" name="nameP2" id="nameP2">
+            <button id="play-button">▶</button>
+        </form>
+    </div>
+    <div class="game-board">
+        <div class="messages"></div>
+        <div class="board"></div>
+        <div class="score">
+            <div class="win-p1"></div>
+            <div class="win-p2"></div>
+            <div class="ties"></div>
+        </div>
+        <div class="buttons">
+            <button id="round-button">⟳</button>
+            <button id="new-game">New Game</button>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
