@@ -6,7 +6,7 @@ function gameBoard() {
     for (let i = 0; i < squaresPerSide; i++) {
       board[i] = [];
       for (let j = 0; j < squaresPerSide; j++) {
-        board[i].push("-");
+        board[i].push("");
       }
     }
   }
@@ -19,8 +19,6 @@ function gameBoard() {
       board[row][column] = playerMark;
   };
 
-  const printBoard = () => console.log(board);
-
   const resetBoard = () => {
     for (let i = 0; i < squaresPerSide; i++) {
       board[i] = [];
@@ -31,20 +29,24 @@ function gameBoard() {
     fillBoard();
   }
 
-  return { getBoard, putMark, printBoard, resetBoard }
+  return { getBoard, putMark, resetBoard }
 }
 
-function users() {
-  const playerOneName = prompt("Player one: enter your name");
-  const playerTwoName = prompt("Player two: enter your name");
+function playing() {
+  const board = gameBoard();
+  const messages = document.querySelector(".messages");
+  const ties = document.querySelector(".ties");
+  const winsP1 = document.querySelector(".win-p1");
+  const winsP2 = document.querySelector(".win-p2");
+
   const player = [
     {
-      name: playerOneName,
+      name: "Player One",
       mark: "x",
       wins: 0,
     },
     {
-      name: playerTwoName,
+      name: "Player Two",
       mark: "o",
       wins: 0,
     }
@@ -54,65 +56,159 @@ function users() {
   const switchPlayerTurn = () => {
     activePlayer === player[0] ? activePlayer = player[1] : activePlayer = player[0];
   }
-  return { getActivePlayer, switchPlayerTurn }
-}
 
-function playing() {
-  const players = users();
-  const board = gameBoard();
   const newRound = () => {
     board.resetBoard();
-    console.log(`Let's start a new round, shall we?`);
-    newTurn();
+    messages.textContent = `It's your turn, ${getActivePlayer().name}`;
   }
-  const newTurn = () => {
-    board.printBoard();
-    console.log(`It's your turn, ${players.getActivePlayer().name}`);
-  }
+
   const playTurn = (row, column) => {
-    if (board.getBoard()[row][column] === "-") {
-      board.putMark(row, column, players.getActivePlayer().mark);
-      console.log(`${players.getActivePlayer().name} has put "${players.getActivePlayer().mark}" into row ${row}, column ${column}`);
-      checkWin(row, column);
-    } else {
-        console.log("Check your input, please. Something is wrong with it.")
-        newTurn();
-        return;
-    }
+      board.putMark(row, column, getActivePlayer().mark);
   }
-  const tieCounter = () => {
+
+  const tieCounter = (() => {
     let tie = 0;
     return () => {
       tie++;
-      console.log(`It's a tie... Number of ties: ${tie}`);
+      ties.textContent = tie;
+      messages.textContent = `It's a tie...`;
     };
-  };
-  const tie = tieCounter();
+  })();
+
   const checkWin = (row, column) => {
-    const checkFullBoard = board.getBoard().map(row => row.filter(cell => cell != "-")).filter(row => row.length === 3);
-    const currentRow = board.getBoard()[row].filter(cell => cell === players.getActivePlayer().mark);
-    const currentColumn = board.getBoard().map(cell => cell[column]).filter(cell => cell === players.getActivePlayer().mark);
-    const leftDiagonal = [[board.getBoard()[0][0]],[board.getBoard()[1][1]],[board.getBoard()[2][2]]].filter(cell => cell == players.getActivePlayer().mark);
-    const rightDiagonal = [[board.getBoard()[2][0]],[board.getBoard()[1][1]],[board.getBoard()[0][2]]].filter(cell => cell == players.getActivePlayer().mark);
+    const checkFullBoard = board.getBoard().map(row => row.filter(cell => cell != "")).filter(row => row.length === 3);
+    const currentRow = board.getBoard()[row].filter(cell => cell === getActivePlayer().mark);
+    const currentColumn = board.getBoard().map(cell => cell[column]).filter(cell => cell === getActivePlayer().mark);
+    const leftDiagonal = [[board.getBoard()[0][0]],[board.getBoard()[1][1]],[board.getBoard()[2][2]]].filter(cell => cell == getActivePlayer().mark);
+    const rightDiagonal = [[board.getBoard()[2][0]],[board.getBoard()[1][1]],[board.getBoard()[0][2]]].filter(cell => cell == getActivePlayer().mark);
     if (currentRow.length === 3 || currentColumn.length === 3 || leftDiagonal.length === 3 || rightDiagonal.length === 3) {
-      players.getActivePlayer().wins++;
-      console.log(`${players.getActivePlayer().name} won! It's your win #${players.getActivePlayer().wins}`);
-      board.printBoard();
-      players.switchPlayerTurn();
-      newRound();
+      getActivePlayer().wins++;
+      messages.textContent = `${getActivePlayer().name} won! Congrats!`;
+      winsP1.textContent = player[0].wins;
+      winsP2.textContent = player[1].wins;
+      const square = document.querySelectorAll(".square");
+      square.forEach(button => button.disabled = true);
+      switchPlayerTurn();
     } else if (checkFullBoard.length === 3) {
-        board.printBoard();
-        tie();
-        players.switchPlayerTurn();
-        newRound()
+        tieCounter();
+        switchPlayerTurn();
      } else {
-        players.switchPlayerTurn();
-        newTurn();
+        switchPlayerTurn();
+        messages.textContent = `It's your turn, ${getActivePlayer().name}`;
     }
   }
-  
-  newRound();
-  return { playTurn };
+  return { player, getActivePlayer, playTurn, newRound, getBoard: board.getBoard, checkWin };
 }
 
-const game = playing();
+function displayGame () {
+  const game = playing();
+  const boardDiv = document.querySelector(".board");
+  const winsP1 = document.querySelector(".win-p1");
+  const winsP2 = document.querySelector(".win-p2");
+  const ties = document.querySelector(".ties");
+  winsP1.textContent = "0";
+  winsP2.textContent = "0";
+  ties.textContent = "0";
+  
+  const boardSection = document.querySelector(".game-board");
+  boardSection.style.display = "none";
+
+  const playButton = document.querySelector("#play-button");
+  const roundButton = document.querySelector("#round-button");
+  const newGame = document.querySelector("#new-game");
+
+  playButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    const userData = document.querySelector(".user-data");
+    userData.style.display = "none";
+    boardSection.style.display = "flex";
+    game.player[0].name = document.querySelector("#nameP1").value || "Player One";
+    game.player[1].name = document.querySelector("#nameP2").value || "Player Two";
+    game.newRound();
+    displayBoard();
+  })
+  roundButton.addEventListener("click", () => {
+    game.newRound();
+    displayBoard();
+  });
+  newGame.addEventListener("click", () => {
+    location.reload();
+  })
+
+  const displayBoard = () => {
+    const buttonCounter = (function() {
+      let counter = 0;
+      return function() {
+          counter++;
+          return counter;
+      }
+    })();
+    boardDiv.textContent = "";
+    const board = game.getBoard();
+    board.forEach(row => {
+      row.forEach(cell => {
+        const square = document.createElement("button");
+        boardDiv.appendChild(square);
+        square.setAttribute("class", "square");
+        square.setAttribute("id", buttonCounter());
+        square.textContent = cell;
+        if (cell != "") {
+          square.disabled = true;
+        }
+    })});
+  }
+  
+  boardDiv.addEventListener("click", (e) => {
+  switch (e.target.id) {
+    case "1":
+      game.playTurn(0,0);
+      displayBoard();
+      game.checkWin(0,0);
+      break;
+    case "2":
+      game.playTurn(0,1);
+      displayBoard()
+      game.checkWin(0,1);
+      break;
+    case "3":
+      game.playTurn(0,2);
+      displayBoard();
+      game.checkWin(0,2)
+      break;
+    case "4":
+      game.playTurn(1,0);
+      displayBoard();
+      game.checkWin(1,0);
+      break;
+    case "5":
+      game.playTurn(1,1);
+      displayBoard();
+      game.checkWin(1,1);
+      break;
+    case "6":
+      game.playTurn(1,2);
+      displayBoard();
+      game.checkWin(1,2)
+      break;
+    case "7":
+      game.playTurn(2,0);
+      displayBoard();
+      game.checkWin(2,0)
+      break;
+    case "8":
+      game.playTurn(2,1);
+      displayBoard();
+      game.checkWin(2,1)
+      break;
+    case "9":
+      game.playTurn(2,2);
+      displayBoard();
+      game.checkWin(2,2)
+      break;
+    default:
+      break;
+  }
+  });
+};
+
+displayGame();
