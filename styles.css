@@ -1,0 +1,182 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 2.5vh;
+    background-color: #003f88;
+    color: #fdc500;
+    font-size: 1.2rem;
+    font-family: system-ui;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    height: 10vh;
+    width: 100%;
+    border-bottom: 1px solid #fdc500;
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+}
+
+form {
+    width: 100%;
+    padding: 50px;
+    font-family: 'Courier New';
+    border: 1px solid #ffd500;
+    border-radius: 5px;
+    margin-top: 40px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.form-row input[type='text'] {
+    background-color: #00296b;
+    color: #fdc500;
+    border: 1px solid #fdc500;
+    border-radius: 3px;
+    width: 100%;
+    padding: 7px;
+    font-size: 1rem;
+}
+
+.form-row label {
+    margin-bottom: 1rem;
+}
+
+.form-row button,
+#round-button,
+#new-game {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fdc500;
+    background-color: #00296b;
+    border: 1px solid #fdc500;
+    border-radius: 3px;
+    padding: 10px 40px;
+    cursor: pointer;
+}
+  
+.form-row button:hover,
+#round-button:hover,
+#new-game:hover {
+    background-color: #003f88;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+.game-board {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+}
+
+.messages {
+    font-size: 1.5rem;
+    font-family: monospace;
+    text-align: center;
+    margin: 1rem;
+}
+
+.board {
+    background-color: #ffd500;
+    border: 1px #fdc500 solid;
+    border-radius: 5px;
+    width: 37vh;
+    height: 37vh;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    justify-items: center;
+}
+
+.board button {
+    background-color: #00296b;
+    color: #00509d;
+    width: 12vh;
+    height: 12vh;
+    cursor: pointer;
+}
+
+.square {
+    font-size: 4rem;
+    font-weight: bold;
+    display: grid;
+    align-content: center;
+    border-radius: 5px;
+}
+
+.score {
+    font-size: 2rem;
+    padding: 10px;
+    margin: 20px;
+    text-align: center;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: #00296b;
+    color: #ffd500;
+    border: 1px #fdc500 solid;
+    border-radius: 5px;
+    height: 12vh;
+    width: 45%;
+    position: relative;
+}
+
+.win-p1::before {
+    content: "P1";
+    position: absolute;
+    font-size: 0.9rem;
+    top: 4px;
+}
+
+.win-p2::before {
+    content: "P2";
+    position: absolute;
+    font-size: 0.9rem;
+    top: 4px;
+}
+
+.ties::before {
+    content: "Ties";
+    position: absolute;
+    font-size: 0.9rem;
+    top: 4px;
+    right: 40px;
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#round-button,
+#new-game {
+    height: 10vh;
+    width: 20vh;
+}
+
+#round-button {
+    font-size: 2rem;
+}
