@@ -137,7 +137,7 @@ button:disabled {
     border: 1px #fdc500 solid;
     border-radius: 5px;
     height: 12vh;
-    width: 45%;
+    width: 35%;
     position: relative;
 }
 
@@ -156,11 +156,10 @@ button:disabled {
 }
 
 .ties::before {
-    content: "Ties";
+    content: "Tie";
     position: absolute;
     font-size: 0.9rem;
     top: 4px;
-    right: 40px;
 }
 
 .buttons {
